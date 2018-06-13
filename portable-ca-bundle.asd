@@ -1,14 +1,3 @@
-#|
-  This file is a part of portable-ca-bundle project.
-|#
-
-
-(in-package :cl-user)
-(defpackage portable-ca-bundle-asd
-  (:use :cl :asdf))
-(in-package :portable-ca-bundle-asd)
-
-
 (defsystem portable-ca-bundle
   :version (:read-file-form "version.lisp-expr")
   :author ""

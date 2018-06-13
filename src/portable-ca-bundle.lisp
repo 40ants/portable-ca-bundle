@@ -1,4 +1,3 @@
-(in-package :cl-user)
 (defpackage portable-ca-bundle
   (:use :cl)
   (:export
