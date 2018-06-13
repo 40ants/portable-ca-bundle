@@ -4,77 +4,38 @@
 
 .. insert-your badges like that:
 
-.. image:: https://travis-ci.org/40ants/cl-hamcrest.svg?branch=master
-    :target: https://travis-ci.org/40ants/cl-hamcrest
+.. image:: https://travis-ci.org/40ants/portable-ca-bundle.svg?branch=master
+    :target: https://travis-ci.org/40ants/portable-ca-bundle
 
 .. Everything starting from this commit will be inserted into the
    index page of the HTML documentation.
 .. include-from
 
-Give some introduction.
+This system defines a macro to restore
+``dexador.backend.usocket::*ca-bundle*`` variable's value. By default,
+this variable points to a file located inside ``dexador`` system, but
+when you've built a binary and distributed it to another machine, lisp
+is unable to find that file.
 
-Reasoning
-=========
 
-Explain why this project so outstanding and why it
-was created.
+``with-portable-ca-bundle`` macro should be used at the top level and
+wrap your "main" function. It will read ca-bundle file into the memory
+and provide another macro ``with-restored-ca-bundle``, which can be used
+inside of the "main" function to dump ca-bundle into the temprorary file
+and point ``dexador.backend.usocket::*ca-bundle*`` there.
 
-You can give some examples. This is how common lisp
-code should be formatted:
+Here is how you should use it:
 
 .. code-block:: common-lisp
 
-   (defvar log-item '(:|@message| "Some"
-                      :|@timestamp| 122434342
-                      ;; this field is wrong and
-                      ;; shouldn't be here
-                      :|@fields| nil))
+   (with-portable-ca-bundle ()
+     (defun main (&rest args)
+       (with-restored-ca-bundle ()
+         (format t "RESPONSE: ~A~%"
+                 (dexador:get "https://google.com/")))))
 
-And this is how you can provide REPL examples:
-
-.. code-block:: common-lisp-repl
-
-   TEST> (format nil "Blah minor: ~a"
-                     100500)
-   "Blah minor: 100500"
-
-Roadmap
-=======
-
-Provide a Roadmap.
 
 .. Everything after this comment will be omitted from HTML docs.
 .. include-to
 
-Building Documentation
-======================
-
-Provide instruction how to build or use your library.
-
-How to build documentation
---------------------------
-
-To build documentation, you need a Sphinx. It is
-documentaion building tool written in Python.
-
-To install it, you need a virtualenv. Read
-this instructions
-`how to install it
-<https://virtualenv.pypa.io/en/stable/installation/#installation>`_.
-
-Also, you'll need a `cl-launch <http://www.cliki.net/CL-Launch>`_.
-It is used by documentation tool to run a script which extracts
-documentation strings from lisp systems.
-
-Run these commands to build documentation::
-
-  virtualenv env
-  source env/bin/activate
-  pip install -r docs/requirements.txt
-  invoke build_docs
-
-These commands will create a virtual environment and
-install some python libraries there. Command ``invoke build_docs``
-will build documentation and upload it to the GitHub, by replacing
-the content of the ``gh-pages`` branch.
 
